@@ -52,7 +52,8 @@
                 {% endif %}
 
                 <div style="flex: 1;">
-                    <h3 style="margin: 0 0 0.5rem 0; color: #1E293B; font-family: var(--font-heading);">{{ item.product.name }}</h3>
+                    <h3 style="margin: 0 0 0.5rem 0; color: #1E293B; font-family: var(--font-heading);">{{
+                        item.product.name }}</h3>
                     <div style="color: #64748B;">₹{{ item.product.price }}</div>
                 </div>
 
@@ -69,7 +70,8 @@
             {% endfor %}
 
             <div style="text-align: right; margin-top: 2rem;">
-                <div style="font-size: 1.5rem; font-weight: 800; color: #1E293B; margin-bottom: 1.5rem;">Total: ₹{{ total }}</div>
+                <div style="font-size: 1.5rem; font-weight: 800; color: #1E293B; margin-bottom: 1.5rem;">Total: ₹{{
+                    total }}</div>
                 <a href="{% url 'address' %}"
                     style="display: inline-block; padding: 1rem 3rem; background: var(--gradient-button); color: white; text-decoration: none; border-radius: 50px; font-weight: bold; box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);">
                     PROCEED TO CHECKOUT

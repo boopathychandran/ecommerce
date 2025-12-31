@@ -51,8 +51,7 @@
             </div>
 
             <div style="flex: 1;">
-                <h1 style="font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 1rem; color: #1E293B;">{{
-                    product.name }}</h1>
+                <h1 style="font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 1rem; color: #1E293B;">{{ product.name }}</h1>
                 <div
                     style="font-size: 2rem; font-weight: 800; background: var(--gradient-button); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem;">
                     ₹{{ product.price }}</div>
@@ -76,7 +75,7 @@
                     </form>
                 </div>
 
-                {% if product.stock <= 5 and product.stock> 0 %}
+                {% if product.stock <= 5 and product.stock > 0 %}
                     <div style="color: #F59E0B; font-weight: bold;">Only {{ product.stock }} left in stock!</div>
                     {% elif product.stock == 0 %}
                     <div style="color: #EF4444; font-weight: bold;">Out of Stock</div>
