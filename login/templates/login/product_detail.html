@@ -1,47 +1,103 @@
 {% load static %}
-<img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
-
-{% comment %} {% url %} {% endcomment %}
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-   <meta charset="UTF-8">
-    <title>Chandran Electronics product details</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <script src="{% static 'js/theme.js' %}"></script>
+    <meta charset="UTF-8">
+    <title>{{ product.name }} | Chandran Electronics</title>
+    <link rel="stylesheet" href="{% static 'css/modern-gradient.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body>
+    <div id="particles-js" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;"></div>
 
-    <!-- Website Title -->
-    <div class="site-title" style="background-color: #333; color: white; padding: 10px; text-align: center;">
-        <h1>VinKart</h1>
-    </div>
+    <style>
+        .main-content {
+            background: transparent !important;
+        }
+    </style>
 
-    <!-- Product Page Container -->
-    <div class="product-container" style="display: flex; gap: 40px; padding: 30px; flex-wrap: wrap;">
-        
-        <!-- Product Image -->
-        <div class="product-image">
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 300px; max-height: 300px; border-radius: 8px;">
+    <nav class="top-nav">
+        <div class="logo">
+            <a href="{% url 'ecommerce' %}" style="text-decoration:none;">
+                <div
+                    style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 800; color: #1E293B; display: flex; align-items: center; gap: 0.5rem;">
+                    <span class="material-icons" style="color: #6366F1;">bolt</span>
+                    <span>Chandran<span style="color: #6366F1;">ELECTRONICS</span></span>
+                </div>
+            </a>
+        </div>
+        <div class="top-right-actions">
+            <a href="{% url 'cart' %}">
+                <div class="icon-badge">
+                    <span class="material-icons">shopping_cart</span>
+                    {% if cart_count > 0 %}<div class="badge">{{ cart_count }}</div>{% endif %}
+                </div>
+            </a>
+        </div>
+    </nav>
 
-        <!-- Product Details -->
-        <div class="product-details">
-            <h2>{{ product.name }}</h2>
-            <p><strong>Category:</strong> {{ product.category }}</p>
-            <p><strong>Price:</strong> ₹{{ product.price }}</p>
-            <p>{{ product.description }}</p>
-            
-            <form method="POST" action="{% url 'add_to_cart' product.id %}">
-                {% csrf_token %}
-                <button type="submit" style="padding: 8px 16px; background-color: green; color: white; border: none; border-radius: 4px;">Add to Cart</button>
-            </form>
+    <div class="main-content container">
+        <div class="glass-card" style="padding: 3rem; display: flex; gap: 3rem; margin-top: 2rem;">
+            <div style="flex: 1;">
+                {% if main_image %}
+                <img src="{{ main_image }}" alt="{{ product.name }}"
+                    style="width: 100%; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                {% else %}
+                <img src="{% static 'images/default.jpg' %}" alt="No Image" style="width: 100%; border-radius: 15px;">
+                {% endif %}
+            </div>
+
+            <div style="flex: 1;">
+                <h1 style="font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 1rem; color: #1E293B;">{{
+                    product.name }}</h1>
+                <div
+                    style="font-size: 2rem; font-weight: 800; background: var(--gradient-button); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem;">
+                    ₹{{ product.price }}</div>
+
+                <p style="color: #64748B; line-height: 1.6; margin-bottom: 2rem;">{{ product.description }}</p>
+
+                <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                    <form action="{% url 'add_to_cart' product.id %}" method="POST" style="flex: 1;">
+                        {% csrf_token %}
+                        <button type="submit"
+                            style="width: 100%; padding: 1rem; border-radius: 50px; background: var(--gradient-button); color: white; border: none; font-weight: bold; cursor: pointer; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);">
+                            ADD TO CART
+                        </button>
+                    </form>
+                    <form action="{% url 'add_to_wishlist' product.id %}" method="POST" style="flex: 1;">
+                        {% csrf_token %}
+                        <button type="submit"
+                            style="width: 100%; padding: 1rem; border-radius: 50px; background: white; color: #EF4444; border: 2px solid #EF4444; font-weight: bold; cursor: pointer; font-size: 1.1rem;">
+                            WISHLIST
+                        </button>
+                    </form>
+                </div>
+
+                {% if product.stock <= 5 and product.stock> 0 %}
+                    <div style="color: #F59E0B; font-weight: bold;">Only {{ product.stock }} left in stock!</div>
+                    {% elif product.stock == 0 %}
+                    <div style="color: #EF4444; font-weight: bold;">Out of Stock</div>
+                    {% endif %}
+            </div>
         </div>
     </div>
 
-    <div style="padding-left: 30px;">
-        <a href="{% url 'ecommerce' %}" style="color: purple;">← Back to Home</a>
-    </div>
-
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS('particles-js', {
+            "particles": {
+                "number": { "value": 60 },
+                "color": { "value": "#ffffff" },
+                "opacity": { "value": 0.5 },
+                "size": { "value": 3 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
+                "move": { "enable": true, "speed": 6 }
+            }
+        });
+    </script>
 </body>
+
 </html>

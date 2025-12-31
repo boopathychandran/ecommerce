@@ -1,186 +1,573 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Payment - Chandran Electronics</title>
-    <!-- Bootstrap 5 CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/modern-gradient.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            /* Matching cart.html gradient and animation */
-            background: linear-gradient(120deg, #e0f2fe 0%, #bbf7d0 50%, #34d399 100%);
-            background-size: 200% 200%;
-            animation: gradientBG 12s ease-in-out infinite;
+            font-family: var(--font-body);
+            background: var(--gradient-animated);
+            background-size: 800% 800%;
+            animation: gradientFlow 20s ease infinite;
             min-height: 100vh;
         }
-        @keyframes gradientBG {
-            0% {background-position: 0% 50%;}
-            50% {background-position: 100% 50%;}
-            100% {background-position: 0% 50%;}
+
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: transparent;
         }
-        .navbar {
-            background: rgba(52, 211, 153, 0.95) !important; /* Matching cart.html navbar */
-            box-shadow: 0 4px 24px rgba(52, 211, 153, 0.15); /* Matching cart.html navbar */
-        }
-        .navbar-brand, .navbar-text {
-            color: #065f46 !important; /* Matching cart.html navbar */
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-        .site-title h1 {
-            color: #065f46; /* Matching cart.html site title */
-            font-weight: 800;
-            margin: 2rem 0 1rem 0;
-            text-align: center;
-            text-shadow: 0 4px 24px rgba(52, 211, 153, 0.15); /* Matching cart.html site title */
-            letter-spacing: 2px;
-            font-size: 2.5rem;
-        }
-        .cart-container {
-            background: #ede8e8f7;
-            border-radius: 1rem;
-            box-shadow: 0 2px 16px rgba(16,185,129,0.10);
-            box-shadow: 0 2px 16px rgba(52,211,153,0.10); /* Matching cart.html summary box */
-            margin: 2rem auto;
-            max-width: 700px;
-        }
-        .cart-item {
+
+        .nav-left {
             display: flex;
             align-items: center;
-            background: #fff;
-            border-radius: 1rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 8px rgba(16,185,129,0.10);
-            padding: 1rem;
+            gap: 1rem;
         }
-        .cart-item img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 0.5rem;
-            border: 2px solid #34d399; /* Matching cart.html image border */
-            margin-right: 1.5rem;
+
+        .back-btn {
+            background: var(--gradient-button);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all var(--transition-smooth);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+            text-decoration: none;
+            font-size: 0.95rem;
         }
-        .cart-details h3 {
-            margin: 0 0 0.5rem 0;
-            color: #065f46; /* Matching cart.html site title */
-            font-size: 1.2rem;
-            font-weight: 700;
+
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.6);
+            color: white;
         }
-        .cart-details p {
-            margin: 0;
-            color: #334155;
-        }
-        .cart-summary {
+
+        .nav-title {
+            font-family: var(--font-heading);
             font-size: 1.5rem;
             font-weight: 700;
-            color: #34d399; /* Using a primary green from cart.html */
-            margin-bottom: 1.5rem;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
         }
-        .btn-paynow {
-            background: linear-gradient(90deg, #34d399 0%, #10b981 100%); /* Matching cart.html checkout button */
-            color: #fff;
-            border-radius: 2rem;
-            padding: 0.75rem 2rem;
-            font-weight: 700;
-            transition: background 0.2s, box-shadow 0.2s;
-            box-shadow: 0 2px 8px rgba(52,211,153,0.15); /* Matching cart.html checkout button */
-            border: none;
-            margin-right: 1rem;
+
+        .top-right-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
-        .btn-paynow:hover {
-            background: linear-gradient(90deg, #10b981 0%, #34d399 100%); /* Matching cart.html checkout button hover */
-            box-shadow: 0 4px 16px rgba(52,211,153,0.25); /* Matching cart.html checkout button hover */
-        }
-        .btn-back {
-            background: #f87171; /* Matching cart.html remove button */
-            color: #fff;
-            border-radius: 1rem;
-            padding: 0.5rem 1.5rem;
-            font-weight: 500;
-            border: none;
-            transition: background 0.2s;
+
+        .icon-badge {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-button);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
             text-decoration: none;
         }
-        .btn-back:hover {
-            background: #dc2626; /* Matching cart.html remove button hover */
-            color: #fff;
+
+        .icon-badge:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.6);
         }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #EC4899 0%, #FDA4AF 100%);
+            color: white;
+            border: none;
+            padding: 0.9rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.6);
+        }
+
+        .payment-container {
+            margin-top: 120px;
+            padding: 2rem 3rem;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .page-title {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 3rem;
+            letter-spacing: 2px;
+            animation: slideInUp 0.8s ease;
+        }
+
+        .payment-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 32px var(--glass-shadow);
+            animation: slideInUp 1s ease;
+        }
+
+        .items-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid var(--gradient-button);
+            background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .payment-item {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--glass-border);
+            transition: all var(--transition-smooth);
+        }
+
+        .payment-item:hover {
+            background: rgba(255, 255, 255, 0.7);
+            transform: translateX(5px);
+            border-color: var(--color-primary);
+        }
+
+        .item-image {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-right: 1.5rem;
+            border: 2px solid var(--glass-border);
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .item-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .item-info-label {
+            font-weight: 600;
+            color: var(--color-accent);
+        }
+
+        .summary-section {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .summary-row.total {
+            border-top: 2px solid var(--glass-border);
+            padding-top: 1rem;
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .summary-label {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .summary-value {
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        .address-section {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        .address-title {
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+        }
+
+        .address-detail {
+            color: #666;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn-paynow {
+            background: var(--gradient-button);
+            color: white;
+            border: none;
+            padding: 1.1rem 3rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+            font-family: var(--font-heading);
+            letter-spacing: 0.5px;
+        }
+
+        .btn-paynow:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(139, 92, 246, 0.6);
+        }
+
+        .btn-paynow:active {
+            transform: translateY(-2px);
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, #94A3B8 0%, #64748B 100%);
+            color: white;
+            border: none;
+            padding: 1.1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 6px 20px rgba(100, 116, 139, 0.3);
+            font-family: var(--font-heading);
+        }
+
+        .btn-back:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(100, 116, 139, 0.5);
+            color: white;
+        }
+
         .empty-cart-msg {
             text-align: center;
-            color: #64748b; /* Matching cart.html empty cart message */
-            margin-top: 3rem;
-            font-size: 1.25rem;
+            color: var(--color-primary);
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 15px;
+            border: 2px dashed var(--glass-border);
         }
-        @media (max-width: 600px) {
-            .cart-item {
+
+        @media (max-width: 768px) {
+            .payment-container {
+                padding: 1rem;
+                margin-top: 100px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .payment-card {
+                padding: 1.5rem;
+            }
+
+            .item-info {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .payment-item {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .cart-item img {
-                margin-bottom: 1rem;
+
+            .item-image {
+                width: 100%;
+                height: 200px;
                 margin-right: 0;
+                margin-bottom: 1rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-paynow,
+            .btn-back {
+                width: 100%;
+                padding: 1rem;
+            }
+
+            .top-nav {
+                padding: 1rem;
+            }
+
+            .nav-title {
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'cart' %}">← Back to Cart</a>
-            <span class="navbar-text">Payment</span>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="logo">
+            <a href="{% url 'ecommerce' %}" class="logo-advanced">
+                <div class="logo-icon-wrap">
+                    <span class="material-icons" style="color: white; font-size: 2rem;">bolt</span>
+                </div>
+                <div class="logo-text-wrap">
+                    <span class="logo-main">Chandran</span>
+                    <span class="logo-sub">ELECTRONICS</span>
+                </div>
+            </a>
+        </div>
+        <div class="top-right-actions">
+            <a href="{% url 'wishlist' %}" class="icon-badge">
+                <span class="material-icons">favorite</span>
+            </a>
+            <form method="post" action="{% url 'logout' %}" style="display:inline; margin:0;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">
+                    <span class="material-icons" style="font-size:1.2rem;">logout</span>Sign Out
+                </button>
+            </form>
         </div>
     </nav>
-    <div class="site-title">
-        <h1>Payment</h1>
-    </div>
-    <div class="cart-container">
+
+    <!-- Payment Container -->
+    <div class="payment-container">
+        <h1 class="page-title">Secure <span>Payment</span></h1>
+
+        <!-- Checkout Steps -->
+        <div class="checkout-steps">
+            <div class="step completed">
+                <div class="step-icon"><span class="material-icons">shopping_cart</span></div>
+                <div class="step-label">Cart</div>
+            </div>
+            <div class="step completed">
+                <div class="step-icon"><span class="material-icons">check</span></div>
+                <div class="step-label">Address</div>
+            </div>
+            <div class="step active">
+                <div class="step-icon">3</div>
+                <div class="step-label">Payment</div>
+            </div>
+        </div>
+
         {% if cart %}
-            {% for item in cart %}
-                <div class="cart-item">
-                    <img src="{{ item.image }}" alt="{{ item.name }}">
-                    <div class="cart-details">
-                        <h3>{{ item.name }}</h3>
-                        <p>Price: ₹{{ item.price }}</p>
-                        <p>Quantity: {{ item.quantity }}</p>
-                        <p>Total: ₹{{ item.total }}</p>
+        <div class="payment-card">
+            <!-- Items Section -->
+            <div class="items-section">
+                <div class="section-title">📦 Order Items</div>
+                {% for item in cart %}
+                <div class="payment-item">
+                    {% if item.product.image %}
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="item-image">
+                    {% else %}
+                    <img src="{% static 'images/default.jpg' %}" alt="No Image" class="item-image">
+                    {% endif %}
+                    <div class="item-details">
+                        <div class="item-name">{{ item.product.name }}</div>
+                        <div class="item-info">
+                            <div>
+                                <div class="item-info-label">Price</div>
+                                <div>₹{{ item.product.price }}</div>
+                            </div>
+                            <div>
+                                <div class="item-info-label">Quantity</div>
+                                <div>{{ item.quantity }}</div>
+                            </div>
+                            <div>
+                                <div class="item-info-label">Total</div>
+                                <div>₹{{ item.total_price }}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            {% endfor %}
-            <div class="payment-actions text-center">
-                <div class="cart-summary">
-                    Grand Total: ₹{{ amount }}
-                </div>
-                <button id="rzp-button" class="btn btn-paynow">Pay Now</button>
-                <a href="{% url 'cart' %}" class="btn-back">Back to Cart</a>
+                {% endfor %}
             </div>
+
+            <!-- Summary Section -->
+            <div class="summary-section">
+                <div class="section-title">💳 Payment Summary</div>
+                <div class="summary-row total">
+                    <span class="summary-label">Grand Total:</span>
+                    <span class="summary-value">₹{{ amount|add:'0'|stringformat:'.2f' }}</span>
+                </div>
+            </div>
+
+            <!-- Address Section -->
+            <div class="address-section">
+                <div class="section-title">📍 Shipping Address</div>
+                <div class="address-detail">
+                    <strong class="address-title">{{ address.name }}</strong>
+                </div>
+                <div class="address-detail">{{ address.address }}</div>
+                <div class="address-detail">{{ address.city }}, {{ address.pincode }}</div>
+                <div class="address-detail">{{ address.phone }}</div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button id="rzp-button" class="btn-paynow">
+                    <span class="material-icons" style="margin-right: 0.5rem; vertical-align: middle;">payment</span>
+                    Pay Now ₹{{ amount|add:'0'|stringformat:'.2f' }}
+                </button>
+                <a href="{% url 'address' %}" class="btn-back">
+                    <span class="material-icons" style="font-size: 20px;">arrow_back</span>
+                    Shipping Information
+                </a>
+            </div>
+        </div>
         {% else %}
-            <p class="empty-cart-msg">Your cart is empty.</p>
+        <div class="payment-card">
+            <p class="empty-cart-msg">
+                <span class="material-icons"
+                    style="font-size: 3rem; display: block; margin-bottom: 1rem;">shopping_cart</span>
+                Your cart is empty. Please add items before proceeding to payment.
+            </p>
+            <div class="action-buttons">
+                <a href="{% url 'ecommerce' %}" class="btn-paynow" style="text-decoration: none;">
+                    <span class="material-icons" style="margin-right: 0.5rem; vertical-align: middle;">store</span>
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
         {% endif %}
     </div>
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
-    document.getElementById('rzp-button').onclick = function(e){
-        e.preventDefault();
-        var options = {
-            "key": "{{ razorpay_key }}",
-            "amount": "{{ amount|floatformat:2|add:'0' }}00", // in paise
-            "currency": "INR",
-            "name": "Chandran Electronics",
-            "description": "Order Payment",
-            "order_id": "{{ order_id }}",
-            "handler": function (response){
-                alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
-            },
-            "theme": {
-                "color": "#34d399" /* Matching the primary green from cart.html */
-            }
-        };
-        var rzp1 = new Razorpay(options);
-        rzp1.open();
-    }
+        document.getElementById('rzp-button').addEventListener('click', function (e) {
+            e.preventDefault();
+            var options = {
+                "key": "{{ razorpay_key }}",
+                "amount": parseInt("{{ amount }}"), // amount in paise (integer)
+                "currency": "INR",
+                "name": "Chandran Electronics",
+                "description": "Order Payment",
+                "order_id": "{{ order_id }}",
+                "handler": function (response) {
+                    fetch("{% url 'payment_success' %}", {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": "{{ csrf_token }}",
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(response)
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.href = "{% url 'ecommerce' %}";
+                            } else {
+                                alert("Error finalizing order: " + data.error);
+                            }
+                        });
+                },
+                "theme": {
+                    "color": "#8B5CF6"
+                }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+        });
     </script>
 </body>
+
 </html>
