@@ -4,112 +4,122 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Login | Chandran Electronics</title>
-    <link rel="stylesheet" href="{% static 'css/modern-gradient.css' %}">
+    <title>Login | Future Tech</title>
+    <link rel="stylesheet" href="{% static 'css/future-tech.css' %}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
-            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            height: 100vh;
             overflow: hidden;
         }
 
-        .login-glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        .login-card {
             width: 100%;
             max-width: 400px;
+            padding: 2.5rem;
+            background: rgba(10, 10, 25, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .login-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
             text-align: center;
             color: white;
-            z-index: 10;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .login-input {
             width: 100%;
             padding: 1rem;
-            margin-bottom: 1rem;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            border-radius: 50px;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
             color: white;
-            padding-left: 1.5rem;
-        }
-
-        .login-input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
+            font-family: var(--font-main);
+            transition: all 0.3s;
         }
 
         .login-input:focus {
             outline: none;
-            background: rgba(255, 255, 255, 0.3);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
         }
 
         .login-btn {
             width: 100%;
             padding: 1rem;
-            border-radius: 50px;
+            background: var(--primary);
+            color: black;
+            font-weight: 700;
             border: none;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-weight: bold;
-            font-size: 1.1rem;
+            border-radius: 12px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .login-btn:hover {
-            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .brand-logo {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .brand-logo span {
+            color: var(--primary);
         }
     </style>
 </head>
 
-<body class="modern-gradient">
-    <div id="particles-js" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:0;"></div>
+<body>
+    <div class="mesh-background"></div>
+    <div class="particle-background"></div>
 
-    <div class="login-glass-card">
-        <span class="material-icons" style="font-size: 4rem; margin-bottom: 1rem;">account_circle</span>
-        <h2 style="margin-bottom: 2rem;">Welcome Back</h2>
+    <div class="login-card">
+        <div class="brand-logo">
+            ⚡ Chandran<span>ELECTRONICS</span>
+        </div>
+        <h2 class="login-title">Initialize</h2>
 
         {% if error %}
-        <div style="background: rgba(255,0,0,0.2); padding: 0.5rem; margin-bottom: 1rem; border-radius: 10px;">{{ error
-            }}</div>
+        <div
+            style="background: rgba(255, 0, 85, 0.1); border: 1px solid var(--accent); color: var(--accent); padding: 0.8rem; margin-bottom: 1rem; border-radius: 8px; text-align: center;">
+            {{ error }}
+        </div>
         {% endif %}
 
         <form method="POST">
             {% csrf_token %}
-            <div style="position: relative;">
-                <input type="text" name="username" class="login-input" placeholder="Username" required>
-            </div>
-            <div style="position: relative;">
-                <input type="password" name="password" class="login-input" placeholder="Password" required>
-            </div>
-
-            <button type="submit" class="login-btn">LOGIN</button>
+            <input type="text" name="username" class="login-input" placeholder="USERNAME" required>
+            <input type="password" name="password" class="login-input" placeholder="PASSWORD" required>
+            <button type="submit" class="login-btn">ENTER SYSTEM</button>
         </form>
 
-        <p style="margin-top: 1.5rem; font-size: 0.9rem;">
-            New here? <a href="{% url 'register' %}" style="color: #fff; font-weight: bold;">Create Account</a>
+        <p style="text-align: center; margin-top: 2rem; color: var(--text-muted);">
+            New User? <a href="{% url 'register' %}" style="color: var(--primary); text-decoration: none;">Create
+                Identity</a>
         </p>
     </div>
-
-    <script>
-        particlesJS('particles-js', {
-            "particles": {
-                "number": { "value": 60 },
-                "color": { "value": "#ffffff" },
-                "opacity": { "value": 0.3 },
-                "size": { "value": 3 },
-                "move": { "enable": true, "speed": 2 }
-            }
-        });
-    </script>
 </body>
 
 </html>

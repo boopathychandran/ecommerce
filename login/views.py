@@ -23,6 +23,7 @@ from django.utils import timezone
 import logging
 from uuid import uuid4
 from .services import CartService, OrderService
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -173,15 +174,21 @@ def ajax_add_to_wishlist(request, slug):
     """Add product to wishlist using slug"""
     try:
         product = get_object_or_404(Product, slug=slug)
-        wishlist_item, created = Wishlist.objects.get_or_create(
-            user=request.user,
-            product=product
-        )
+        wishlist_qs = Wishlist.objects.filter(user=request.user, product=product)
+        
+        if wishlist_qs.exists():
+            wishlist_qs.delete()
+            created = False
+        else:
+            Wishlist.objects.create(user=request.user, product=product)
+            created = True
+            
         wishlist_count = Wishlist.objects.filter(user=request.user).count()
         return JsonResponse({
             'success': True,
             'wishlist_count': wishlist_count,
-            'message': f"{product.name} added to wishlist" if created else "Already in wishlist"
+            'action': 'added' if created else 'removed',
+            'message': f"{product.name} added to wishlist" if created else f"{product.name} removed from wishlist"
         })
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
@@ -426,6 +433,23 @@ def ecommerce_view(request):
         del query_params['page']
     url_params = query_params.urlencode()
 
+    # 2025 Sustainability Dashboard Data
+    user_carbon_saved = 0
+    if request.user.is_authenticated:
+        # Calculate approximate carbon saved if they bought eco-friendly products
+        purchased_items = OrderItem.objects.filter(order__user=request.user, product__is_eco_friendly=True)
+        user_carbon_saved = sum(item.quantity * 2.5 for item in purchased_items) # Mock scalar
+
+    # Personalization Level based on Loyalty Points
+    user_loyalty = 0
+    if request.user.is_authenticated:
+        profile, _ = Profile.objects.get_or_create(user=request.user)
+        user_loyalty = profile.loyalty_points
+    
+    personalization_tier = "Standard"
+    if user_loyalty > 1000: personalization_tier = "Elite"
+    elif user_loyalty > 500: personalization_tier = "Pro"
+
     context = {
         'products': products_page,
         'categories': all_categories,
@@ -439,6 +463,10 @@ def ecommerce_view(request):
         'recommendations': recommendations,
         'recently_viewed': recently_viewed,
         'url_params': url_params,
+        # 2025 Features
+        'user_loyalty': user_loyalty,
+        'personalization_tier': personalization_tier,
+        'carbon_saved': user_carbon_saved,
     }
     if request.headers.get('HX-Request'):
         return render(request, 'login/partials/product_grid.html', context)
@@ -464,6 +492,28 @@ def search_suggestions(request):
             })
             
     return JsonResponse({'results': results})
+
+
+@csrf_exempt
+def ajax_voice_search(request):
+    """2025 Trend: Voice Search Context Handler"""
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            transcript = data.get('transcript', '').lower()
+            
+            # Simple intent extraction for 2025 Demo
+            if 'phone' in transcript or 'mobile' in transcript:
+                return JsonResponse({'redirect': '/ecommerce/?query=smartphone'})
+            elif 'laptop' in transcript:
+                return JsonResponse({'redirect': '/ecommerce/?query=laptop'})
+            elif 'eco' in transcript or 'green' in transcript:
+                return JsonResponse({'redirect': '/ecommerce/?query=eco'})
+                
+            return JsonResponse({'query': transcript})
+        except:
+             return JsonResponse({'error': 'Invalid request'}, status=400)
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 
 # ============================================================
@@ -495,15 +545,11 @@ def add_to_cart(request, product_id):
 
 @login_required
 def remove_from_cart(request, product_id):
-    """Remove product from cart"""
+    """Remove product from cart using Service Layer"""
     if request.method == 'POST':
         try:
-            cart = request.session.get('cart', {})
-            if str(product_id) in cart:
-                del cart[str(product_id)]
-                request.session['cart'] = cart
-                request.session.modified = True
-                messages.success(request, 'Item removed from cart')
+            CartService.remove_from_cart(request.user, product_id)
+            messages.success(request, 'Item removed from cart')
         except Exception as e:
             logger.error(f"Error removing from cart: {str(e)}")
             messages.error(request, 'An error occurred')
@@ -516,14 +562,27 @@ def cart_view(request):
     """Display persistent shopping cart from database"""
     cart = CartService.get_or_create_cart(request.user)
     cart_items = cart.items.select_related('product')
-    
     total = cart.total_price
+    
     coupon = request.session.get('coupon', '')
     discount_percent = request.session.get('discount', 0)
     discount_amount = total * Decimal(str(discount_percent)) / Decimal('100')
     
+    cart_items_data = []
+    for item in cart_items:
+        cart_items_data.append({
+            'name': item.product.name,
+            'price': float(item.product.price),
+            'quantity': item.quantity,
+            'total_price': float(item.total_price),
+            'id': item.id,
+            'product_id': item.product.id,
+            'product_slug': item.product.slug,
+            'image_url': item.product.image.url if item.product.image else None,
+        })
+
     context = {
-        'cart': cart_items,
+        'cart': cart_items_data,
         'total': float(total - discount_amount),
         'discount_amount': float(discount_amount),
         'coupon': coupon,
@@ -734,17 +793,7 @@ def payment_view(request):
 
         context = {
             # Build a simple cart list for the template (image/url, price, quantity, total)
-            'cart': [
-                {
-                    'id': item.product.id,
-                    'name': item.product.name,
-                    'price': float(item.product.price),
-                    'quantity': int(item.quantity),
-                    'total': float(item.product.price * item.quantity),
-                    'image': item.product.image.url if item.product and item.product.image else ''
-                }
-                for item in cart_items
-            ],
+            'cart': cart_items,
             'total': float(final_total),
             'razorpay_key': settings.RAZORPAY_KEY_ID,
             'order_id': razorpay_order.get('id', ''),

@@ -1,0 +1,124 @@
+/* Design System - Variables, utilities, components */
+:root{
+  --bg: #0f1724;
+  --surface: #0b1220;
+  --muted: #98a0b3;
+  --accent: #00aaff;
+  --accent-2: #6a5cff;
+  --success: #28a745;
+  --danger: #ff4566;
+  --glass: rgba(255,255,255,0.06);
+  --glass-strong: rgba(255,255,255,0.08);
+  --radius: 12px;
+  --container: 1200px;
+  --fw-regular: 400;
+  --fw-medium: 600;
+  --fw-bold: 700;
+  --ease: cubic-bezier(.2,.9,.3,1);
+}
+
+/* Base */
+html,body{height:100%;}
+body{background:var(--bg);color:#e6eef8;font-family:Inter,Segoe UI,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.container{max-width:var(--container);margin:0 auto;padding:0 20px}
+
+/* Typography */
+h1,h2,h3,h4{line-height:1.05;margin:0 0 12px}
+.h1{font-size:2.4rem}
+.h2{font-size:1.6rem}
+.lead{color:var(--muted)}
+
+/* Utilities */
+.row{display:flex;flex-wrap:wrap;gap:16px}
+.col{flex:1}
+.text-center{text-align:center}
+.hidden{display:none!important}
+.center{display:flex;align-items:center;justify-content:center}
+.mb-8{margin-bottom:8px}
+.mt-8{margin-top:8px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;border:none;cursor:pointer;font-weight:var(--fw-medium);transition:transform .15s var(--ease),box-shadow .15s var(--ease)}
+.btn:active{transform:translateY(1px)}
+.btn-ghost{background:transparent;color:var(--accent);border:1px solid rgba(255,255,255,0.04)}
+.btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#001022;box-shadow:0 6px 20px rgba(42,122,255,0.12)}
+.btn-neutral{background:var(--glass);color:#dbeffd}
+
+/* Glass card */
+.card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));backdrop-filter:blur(6px);border-radius:var(--radius);padding:18px;border:1px solid rgba(255,255,255,0.04)}
+.card-lg{padding:28px;border-radius:18px}
+
+/* Neon accent */
+.neon{position:relative}
+.neon::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 30px rgba(106,92,255,0.08)}
+
+/* Product grid */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.product-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:14px;padding:14px;border:1px solid rgba(255,255,255,0.03);transition:transform .18s var(--ease),box-shadow .18s var(--ease)}
+.product-card:hover{transform:translateY(-6px);box-shadow:0 12px 30px rgba(0,0,0,0.6)}
+.product-image{width:100%;height:180px;object-fit:cover;border-radius:8px}
+.product-meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.price{color:var(--success);font-weight:700}
+
+/* Responsive helpers */
+@media (max-width:900px){.container{padding:0 14px}.products-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.products-grid{grid-template-columns:repeat(1,minmax(0,1fr))}}
+
+/* Small motion */
+.fade-up{transform:translateY(8px);opacity:0;transition:transform .5s var(--ease),opacity .5s var(--ease)}
+.fade-up.in{transform:none;opacity:1}
+
+/* Accessibility focus */
+:focus{outline:2px solid rgba(0,170,255,0.24);outline-offset:3px}
+
+/* Quick color helpers */
+.text-muted{color:var(--muted)}
+.text-accent{color:var(--accent)}
+
+/* Utility for skeleton shimmer */
+.shimmer{background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.06),rgba(255,255,255,0.02));background-size:200% 100%;animation:shimmer 1.6s linear infinite}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* Product Card visuals and responsive tweaks */
+.product-card{display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:14px;min-height:320px;transition:transform .18s var(--ease),box-shadow .18s var(--ease)}
+.product-card:hover{transform:translateY(-6px);box-shadow:0 14px 34px rgba(0,0,0,0.6)}
+.product-card .product-image{width:100%;height:220px;object-fit:cover;border-radius:10px;display:block}
+.product-card .product-info{display:flex;flex-direction:column;gap:8px}
+.product-card .product-title{font-size:1rem;font-weight:700;color:#eaf6ff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.product-card .product-meta{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.product-card .price{color:var(--success);font-weight:700}
+.badge-group .eco-badge,.badge-group .bnpl-badge{background:rgba(255,255,255,0.02);padding:6px 8px;border-radius:8px;font-size:0.78rem;color:var(--muted);backdrop-filter:blur(4px)}
+.category-pill{font-size:0.78rem;padding:6px 10px;border-radius:9px}
+.card-actions{display:flex;gap:8px}
+
+@media (max-width:900px){
+  .product-card{min-height:unset}
+  .product-card .product-image{height:180px}
+}
+@media (max-width:600px){
+  .products-grid{grid-template-columns:repeat(1,minmax(0,1fr))}
+  .product-card .product-image{height:200px}
+  .card-actions{flex-wrap:wrap}
+}
+
+/* Ensure focusable buttons are visible for accessibility */
+.product-card .btn:focus{outline:2px solid rgba(0,170,255,0.2);outline-offset:3px}
+
+/* Checkout flow helpers */
+.checkout-progress{display:flex;gap:12px;align-items:center;margin-bottom:18px}
+.checkout-step{flex:1;position:relative;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.02);text-align:center;color:var(--muted);font-weight:600}
+.checkout-step.active{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#001022;box-shadow:0 8px 24px rgba(42,122,255,0.08)}
+.checkout-step::after{content:'';position:absolute;right:-6px;top:50%;transform:translateY(-50%);width:12px;height:12px;background:transparent}
+
+/* Sticky order summary for payment page */
+.sticky-summary{position:sticky;top:100px;align-self:start}
+
+/* Button loading state */
+.btn-loading{pointer-events:none;opacity:0.85}
+.btn-loading .spinner{display:inline-block;margin-left:10px;vertical-align:middle;width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,0.12);border-top-color:var(--accent);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Small responsive adjustments for checkout */
+@media (min-width:900px){
+  .checkout-layout{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+}

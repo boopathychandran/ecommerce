@@ -1,0 +1,265 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chandran Electronics - Future Tech Experience</title>
+  <link rel="stylesheet" href="{% static 'css/future-tech.css' %}">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+  <!-- Background Elements -->
+  <div class="particle-background"></div>
+  <div class="mesh-background"></div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo-container">
+          <div class="logo">
+            <h1 class="animated-title">
+              <span class="letter">⚡</span>
+              <span class="letter">C</span><span class="letter">h</span><span class="letter">a</span><span
+                class="letter">n</span><span class="letter">d</span><span class="letter">r</span><span
+                class="letter">a</span><span class="letter">n</span>
+              <span class="letter" style="margin-left: 10px;">E</span><span class="letter">l</span><span
+                class="letter">e</span><span class="letter">c</span><span class="letter">t</span><span
+                class="letter">r</span><span class="letter">o</span><span class="letter">n</span><span
+                class="letter">i</span><span class="letter">c</span><span class="letter">s</span>
+            </h1>
+            <span class="logo-tagline typing-effect">Future Tech Experience</span>
+          </div>
+        </div>
+
+        <!-- Theme Toggle (Visual only for now as we are enforced Dark) -->
+        <div class="theme-controls">
+          <!-- Logged in User Badge -->
+          {% if user.is_authenticated %}
+          <span class="filter-chip active" style="margin-right: 1rem;">
+            {{ user.username }}
+          </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="navbar ultra-glass">
+    <div class="container">
+      <div class="nav-content">
+        <div class="nav-links">
+          <a href="{% url 'ecommerce' %}" class="nav-link active">
+            <span class="material-icons">home</span>
+            <span class="nav-text">Home</span>
+          </a>
+
+          <a href="{% url 'profile' %}" class="nav-link">
+            <span class="material-icons">person</span>
+            <span class="nav-text">Account</span>
+          </a>
+
+          <!-- Logout Form -->
+          {% if user.is_authenticated %}
+          <form method="post" action="{% url 'logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">
+              <span class="material-icons">logout</span>
+              <span>Logout</span>
+            </button>
+          </form>
+          {% else %}
+          <a href="{% url 'login' %}" class="nav-link">Login</a>
+          {% endif %}
+        </div>
+
+        <div class="nav-actions" style="display: flex; gap: 1rem;">
+          <a href="{% url 'cart' %}" class="action-btn cart-btn">
+            <span class="material-icons">shopping_cart</span>
+            {% if cart_count > 0 %} <span class="count-badge">{{ cart_count }}</span> {% endif %}
+          </a>
+
+          <a href="{% url 'wishlist' %}" class="action-btn wishlist-btn">
+            <span class="material-icons">favorite</span>
+            {% if wishlist_count > 0 %} <span class="count-badge">{{ wishlist_count }}</span> {% endif %}
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Welcome Section -->
+  <section class="welcome-section">
+    <div class="container">
+      <div class="welcome-content" style="text-align: center; padding: 4rem 0;">
+        <h2 class="welcome-title glitch-text"
+          style="font-size: 3rem; margin-bottom: 1rem; font-weight: 800; color: white;">
+          Welcome back,
+          <span class="username rainbow-text">{% if user.first_name %}{{ user.first_name }}{% else %}Tech Enthusiast{%
+            endif %}</span>!
+        </h2>
+        <p class="welcome-subtitle"
+          style="color: var(--text-muted); font-size: 1.2rem; max-width: 600px; margin: 0 auto 3rem;">
+          Discover the latest tech innovations that shape tomorrow
+        </p>
+        <div class="welcome-stats" style="display: flex; justify-content: center; gap: 4rem;">
+          <div class="stat-item">
+            <div class="stat-number rainbow-text" style="font-size: 2.5rem; font-weight: 800;">1,000</div>
+            <div class="stat-label" style="color: var(--text-muted); font-size: 0.8rem; letter-spacing: 2px;">PRODUCTS
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search Section -->
+  <section class="search-section">
+    <div class="container">
+      <div class="search-container cyber-glass">
+        <div class="search-wrapper">
+          <!-- HTMX Search Integration -->
+          <form method="GET" action="" style="width: 100%;">
+            <div class="search-bar holographic">
+              <span class="material-icons search-icon" style="color: var(--primary); margin-right: 1rem;">search</span>
+              <input type="text" name="query" placeholder="Search for amazing tech products..." id="search-input"
+                autocomplete="off" hx-get="{% url 'ecommerce' %}" hx-target="#product-grid-area"
+                hx-trigger="keyup changed delay:500ms, search" hx-push-url="true" value="{{ search_query }}">
+              <button type="submit" class="search-btn quantum-btn">
+                <span class="material-icons">rocket_launch</span>
+              </button>
+            </div>
+          </form>
+          <div class="search-suggestions" id="search-suggestions"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Section -->
+  <section class="products-section" id="products-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-title-wrapper">
+          <h3 class="section-title holographic-text">Featured Products</h3>
+        </div>
+
+        <!-- Filter Chips (Mock functionality visually, can add hx-get later if needed) -->
+        <div class="filter-chips">
+          <button class="filter-chip active">All</button>
+          <button class="filter-chip">Smartphones</button>
+          <button class="filter-chip">Laptops</button>
+          <button class="filter-chip">Gaming</button>
+        </div>
+      </div>
+
+      <!-- Product Grid Partial Include -->
+      {% include 'login/partials/product_grid.html' %}
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h4>⚡ Chandran Electronics</h4>
+          <p style="color: var(--text-muted); line-height: 1.6;">
+            Your gateway to the future of technology. Premium products, futuristic shopping experience.
+          </p>
+        </div>
+        <div class="footer-links">
+          <h5>Categories</h5>
+          <a href="#">Laptops</a>
+          <a href="#">Smartphones</a>
+          <a href="#">Accessories</a>
+        </div>
+        <div class="footer-links">
+          <h5>Support</h5>
+          <a href="#">Contact Us</a>
+          <a href="#">FAQs</a>
+          <a href="#">Shipping</a>
+        </div>
+        <div class="footer-links">
+          <h5>Account</h5>
+          <a href="{% url 'profile' %}">Profile</a>
+          <a href="{% url 'cart' %}">Cart</a>
+          <a href="{% url 'wishlist' %}">Wishlist</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Chandran Electronics. All rights reserved.</p>
+        <div class="footer-tech-badge" style="color: var(--primary);">
+          Powered by Future Tech
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts from original -->
+  <script>
+    function addToCart(slug, id, btnElement) {
+      const originalHTML = btnElement.innerHTML;
+      btnElement.innerHTML = '<span class="material-icons">check</span>';
+      btnElement.style.background = '#00f3ff';
+      btnElement.style.color = '#000';
+
+      fetch(`/ajax/add_to_cart/${slug}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            // Update badges if referencing them by class
+            document.querySelectorAll('.count-badge').forEach(el => {
+              // Logic to specific badges if needed, currently simplistic
+              // Ideally backend returns specific counts
+            });
+
+            Swal.fire({
+              toast: true, position: 'top-end', showConfirmButton: false,
+              timer: 2000, icon: 'success', title: 'Added to cart',
+              background: '#050511', color: '#fff'
+            });
+          }
+          setTimeout(() => {
+            btnElement.innerHTML = originalHTML;
+            btnElement.style = '';
+          }, 2000);
+        });
+    }
+
+    function addToWishlist(slug) {
+      fetch(`/ajax/add_to_wishlist/${slug}/`, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+      })
+        .then(res => res.json())
+        .then(data => {
+          Swal.fire({
+            toast: true, position: 'top-end', showConfirmButton: false,
+            timer: 2000, icon: 'success', title: data.message,
+            background: '#050511', color: '#fff'
+          });
+        });
+    }
+  </script>
+</body>
+
+</html>

@@ -35,6 +35,7 @@ urlpatterns = [
     path('ajax/move_all_to_cart/', views.ajax_move_all_to_cart, name='ajax_move_all_to_cart'),
     path('ajax/update_cart_quantity/<slug:slug>/<str:action>/', views.ajax_update_cart_quantity, name='ajax_update_cart_quantity'),
     path('ajax/search_suggestions/', views.search_suggestions, name='search_suggestions'),
+    path('ajax/voice_search/', views.ajax_voice_search, name='ajax_voice_search'),
     path('payment/', views.payment_view, name='payment'),
     path('payment/success/', views.payment_success, name='payment_success'),
     path('apply-coupon/', views.apply_coupon, name='apply_coupon'),

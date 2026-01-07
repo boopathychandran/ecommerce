@@ -1,51 +1,170 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Shipping Address</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
+{% block title %}Shipping Address | Chandran Electronics{% endblock %}
 
-<body>
-    <div class="cart-container"> <!-- Using cart container style for simplicity -->
-        <h2>Shipping Information</h2>
+{% block extra_css %}
+<style>
+    .checkout-form input,
+    .checkout-form textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        font-family: var(--font-body);
+        font-size: 1rem;
+        transition: all 0.2s;
+        outline: none;
+    }
 
-        <form method="post" style="max-width: 500px; margin: 0 auto;">
-            {% csrf_token %}
+    .checkout-form input:focus,
+    .checkout-form textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-glow);
+        background: white;
+    }
 
-            <div style="margin-bottom: 15px;">
-                <label style="display:block; margin-bottom:5px;">Full Name</label>
-                {{ form.name }}
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+    }
+
+    .checkout-stepper {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 3rem;
+        position: relative;
+    }
+
+    .checkout-stepper::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #e2e8f0;
+        z-index: 1;
+    }
+
+    .step {
+        position: relative;
+        z-index: 2;
+        background: var(--bg-main);
+        padding: 0 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .step-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: var(--text-muted);
+        transition: all 0.3s;
+    }
+
+    .step.active .step-circle {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+        box-shadow: var(--shadow-neon);
+    }
+
+    .step.active .step-label {
+        color: var(--primary);
+        font-weight: 700;
+    }
+
+    .step-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-muted);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 4rem 2rem;">
+    <div class="animate-in" style="max-width: 650px; margin: 0 auto;">
+
+        <!-- Stepper -->
+        <div class="checkout-stepper">
+            <div class="step active">
+                <div class="step-circle">1</div>
+                <div class="step-label">Shipping</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">2</div>
+                <div class="step-label">Payment</div>
+            </div>
+            <div class="step">
+                <div class="step-circle">3</div>
+                <div class="step-label">Review</div>
+            </div>
+        </div>
+
+        <div class="feature-card" style="padding: 3rem; gap: 2rem;">
+            <div style="text-align: center; margin-bottom: 1rem;">
+                <h1 class="section-title" style="font-size: 1.75rem; margin-bottom: 0.5rem;">Shipping Protocol</h1>
+                <p style="color: var(--text-muted);">Please verify your delivery coordinates for system arrival.</p>
             </div>
 
-            <div style="margin-bottom: 15px;">
-                <label style="display:block; margin-bottom:5px;">Address</label>
-                {{ form.address }}
-            </div>
+            <form method="POST" class="checkout-form">
+                {% csrf_token %}
 
-            <div style="margin-bottom: 15px;">
-                <label style="display:block; margin-bottom:5px;">City</label>
-                {{ form.city }}
-            </div>
+                <div class="form-group">
+                    <label>Recipient Name</label>
+                    {{ form.name }}
+                </div>
 
-            <div style="margin-bottom: 15px;">
-                <label style="display:block; margin-bottom:5px;">Pincode</label>
-                {{ form.pincode }}
-            </div>
+                <div class="form-group">
+                    <label>Delivery Address</label>
+                    {{ form.address }}
+                </div>
 
-            <div style="margin-bottom: 15px;">
-                <label style="display:block; margin-bottom:5px;">Phone</label>
-                {{ form.phone }}
-            </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div class="form-group">
+                        <label>Sector (City)</label>
+                        {{ form.city }}
+                    </div>
+                    <div class="form-group">
+                        <label>Zone Code (Pincode)</label>
+                        {{ form.pincode }}
+                    </div>
+                </div>
 
-            <button type="submit" class="btn"
-                style="background:#28a745; width:100%; color:white; padding:10px; border:none; cursor:pointer;">Continue
-                to Payment</button>
-        </form>
+                <div class="form-group">
+                    <label>Comm-Link (Phone)</label>
+                    {{ form.phone }}
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <button type="submit" class="btn-primary"
+                        style="height: 60px; font-size: 1.1rem; border-radius: 15px;">
+                        Establish Payment Link <span class="material-icons">arrow_forward</span>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</body>
-
-</html>
+</div>
+{% endblock %}

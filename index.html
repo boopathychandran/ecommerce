@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chandran Electronics - Future Tech Experience</title>
+    <link rel="stylesheet" href="static/css/design-system.css">
+    <link rel="stylesheet" href="static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <!-- Dynamic Particle Background -->
+    <div class="particle-background" id="particle-bg">
+        <canvas id="particle-canvas"></canvas>
+    </div>
+
+    <!-- Animated Mesh Background -->
+    <div class="mesh-background">
+        <div class="mesh-gradient mesh-1"></div>
+        <div class="mesh-gradient mesh-2"></div>
+        <div class="mesh-gradient mesh-3"></div>
+        <div class="mesh-gradient mesh-4"></div>
+        <div class="mesh-gradient mesh-5"></div>
+    </div>
+
+    <!-- Floating Orbs -->
+    <div class="floating-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="orb orb-4"></div>
+    </div>
+
+    <!-- Header with Animated Title -->
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo">
+                        <h1 class="animated-title">
+                            <span class="letter">⚡</span>
+                            <span class="letter">C</span>
+                            <span class="letter">h</span>
+                            <span class="letter">a</span>
+                            <span class="letter">n</span>
+                            <span class="letter">d</span>
+                            <span class="letter">r</span>
+                            <span class="letter">a</span>
+                            <span class="letter">n</span>
+                            <span class="letter"> </span>
+                            <span class="letter">E</span>
+                            <span class="letter">l</span>
+                            <span class="letter">e</span>
+                            <span class="letter">c</span>
+                            <span class="letter">t</span>
+                            <span class="letter">r</span>
+                            <span class="letter">o</span>
+                            <span class="letter">n</span>
+                            <span class="letter">i</span>
+                            <span class="letter">c</span>
+                            <span class="letter">s</span>
+                        </h1>
+                        <span class="logo-tagline typing-effect">Future Tech Experience</span>
+                    </div>
+                    <div class="logo-glow"></div>
+                </div>
+                
+                <!-- Enhanced Theme Toggle -->
+                <div class="theme-controls">
+                    <button id="theme-toggle" class="theme-btn morphing-btn" title="Toggle Theme">
+                        <div class="theme-icon-container">
+                            <span class="material-icons theme-icon">brightness_6</span>
+                            <div class="theme-ripple"></div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Ultra-Modern Navigation -->
+    <nav class="navbar ultra-glass">
+        <div class="container">
+            <div class="nav-content">
+                <div class="nav-links">
+                    <a href="#" class="nav-link active liquid-btn">
+                        <span class="material-icons">home</span>
+                        <span class="nav-text">Home</span>
+                        <div class="liquid-bg"></div>
+                    </a>
+                    
+                    <div class="dropdown mega-dropdown">
+                        <button class="nav-link dropdown-toggle liquid-btn">
+                            <span class="material-icons">category</span>
+                            <span class="nav-text">Categories</span>
+                            <span class="material-icons arrow">expand_more</span>
+                            <div class="liquid-bg"></div>
+                        </button>
+                        <div class="dropdown-menu neon-border">
+                            <div class="dropdown-header">
+                                <h3>Explore Categories</h3>
+                                <div class="header-glow"></div>
+                            </div>
+                            <div class="dropdown-grid">
+                                <a href="#" data-category="all" class="dropdown-item featured active">
+                                    <span class="material-icons">inventory</span>
+                                    <span>All Products</span>
+                                    <div class="item-glow"></div>
+                                </a>
+                                <a href="#" data-category="Smartphones" class="dropdown-item">
+                                    <span class="material-icons">smartphone</span>
+                                    <span>Smartphones</span>
+                                    <div class="item-glow"></div>
+                                </a>
+                                <a href="#" data-category="Laptops" class="dropdown-item">
+                                    <span class="material-icons">laptop</span>
+                                    <span>Laptops</span>
+                                    <div class="item-glow"></div>
+                                </a>
+                                <a href="#" data-category="Tablets" class="dropdown-item">
+                                    <span class="material-icons">tablet</span>
+                                    <span>Tablets</span>
+                                    <div class="item-glow"></div>
+                                </a>
+                                <a href="#" data-category="Audio" class="dropdown-item">
+                                    <span class="material-icons">headphones</span>
+                                    <span>Audio</span>
+                                    <div class="item-glow"></div>
+                                </a>
+                                <a href="#" data-category="Accessories" class="dropdown-item">
+                                    <span class="material-icons">mouse</span>
+                                    <span>Accessories</span>
+                                    <div class="item-glow"></div>
+                                </a>
+                                <a href="#" data-category="Gaming" class="dropdown-item">
+                                    <span class="material-icons">sports_esports</span>
+                                    <span>Gaming</span>
+                                    <div class="item-glow"></div>
+                                </a>
+                                <a href="#" data-category="Smart Home" class="dropdown-item">
+                                    <span class="material-icons">home_app_logo</span>
+                                    <span>Smart Home</span>
+                                    <div class="item-glow"></div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="nav-link liquid-btn">
+                        <span class="material-icons">person</span>
+                        <span class="nav-text">Account</span>
+                        <div class="liquid-bg"></div>
+                    </a>
+                </div>
+                
+                <div class="nav-actions">
+                    <button class="action-btn cart-btn floating-btn">
+                        <span class="material-icons">shopping_cart</span>
+                        <span class="count-badge cart-count pulsing">3</span>
+                        <div class="btn-particles"></div>
+                    </button>
+                    
+                    <button class="action-btn wishlist-btn floating-btn">
+                        <span class="material-icons">favorite</span>
+                        <span class="count-badge wishlist-count pulsing">5</span>
+                        <div class="btn-particles"></div>
+                    </button>
+                    
+                    <button class="logout-btn neon-btn">
+                        <span class="material-icons">logout</span>
+                        <span>Logout</span>
+                        <div class="neon-glow"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Animated Welcome Section -->
+    <section class="welcome-section">
+        <div class="container">
+            <div class="welcome-content">
+                <h2 class="welcome-title glitch-text">
+                    Welcome back, 
+                    <span class="username rainbow-text">Tech Enthusiast</span>!
+                </h2>
+                <p class="welcome-subtitle fade-in-up">Discover the latest tech innovations that shape tomorrow</p>
+                <div class="welcome-stats">
+                    <div class="stat-item">
+                        <div class="stat-number counter" data-target="1000">0</div>
+                        <div class="stat-label">Products</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number counter" data-target="50">0</div>
+                        <div class="stat-label">Brands</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number counter" data-target="10000">0</div>
+                        <div class="stat-label">Happy Customers</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Futuristic Search Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-container cyber-glass">
+                <div class="search-wrapper">
+                    <div class="search-bar holographic">
+                        <span class="material-icons search-icon pulse">search</span>
+                        <input type="text" placeholder="Search for amazing tech products..." id="search-input" autocomplete="off">
+                        <button class="search-btn quantum-btn">
+                            <span class="material-icons">rocket_launch</span>
+                            <div class="quantum-ripple"></div>
+                        </button>
+                    </div>
+                    <div class="search-suggestions" id="search-suggestions">
+                        <div class="suggestion-item">iPhone 15 Pro Max</div>
+                        <div class="suggestion-item">MacBook Air M3</div>
+                        <div class="suggestion-item">AirPods Pro</div>
+                        <div class="suggestion-item">PlayStation 5</div>
+                    </div>
+                </div>
+                <div class="search-glow"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Loading Skeleton -->
+    <div id="skeleton-loader" class="skeleton-container">
+        <div class="container">
+            <div class="skeleton-header">
+                <h3>Loading Amazing Products...</h3>
+                <div class="loading-progress">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+            <div class="products-grid">
+                <div class="skeleton-card premium-skeleton">
+                    <div class="skeleton-image shimmer"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-text shimmer"></div>
+                        <div class="skeleton-text short shimmer"></div>
+                        <div class="skeleton-price shimmer"></div>
+                        <div class="skeleton-buttons">
+                            <div class="skeleton-button shimmer"></div>
+                            <div class="skeleton-button shimmer"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-card premium-skeleton">
+                    <div class="skeleton-image shimmer"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-text shimmer"></div>
+                        <div class="skeleton-text short shimmer"></div>
+                        <div class="skeleton-price shimmer"></div>
+                        <div class="skeleton-buttons">
+                            <div class="skeleton-button shimmer"></div>
+                            <div class="skeleton-button shimmer"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-card premium-skeleton">
+                    <div class="skeleton-image shimmer"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-text shimmer"></div>
+                        <div class="skeleton-text short shimmer"></div>
+                        <div class="skeleton-price shimmer"></div>
+                        <div class="skeleton-buttons">
+                            <div class="skeleton-button shimmer"></div>
+                            <div class="skeleton-button shimmer"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skeleton-card premium-skeleton">
+                    <div class="skeleton-image shimmer"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-text shimmer"></div>
+                        <div class="skeleton-text short shimmer"></div>
+                        <div class="skeleton-price shimmer"></div>
+                        <div class="skeleton-buttons">
+                            <div class="skeleton-button shimmer"></div>
+                            <div class="skeleton-button shimmer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Products Section -->
+    <section class="products-section" id="products-section" style="display: none;">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-title-wrapper">
+                    <h3 class="section-title holographic-text">Featured Products</h3>
+                    <div class="title-underline"></div>
+                </div>
+                <div class="filter-chips neon-chips">
+                    <button class="filter-chip active quantum-chip" data-category="all">
+                        <span>All</span>
+                        <div class="chip-glow"></div>
+                    </button>
+                    <button class="filter-chip quantum-chip" data-category="Smartphones">
+                        <span>Smartphones</span>
+                        <div class="chip-glow"></div>
+                    </button>
+                    <button class="filter-chip quantum-chip" data-category="Laptops">
+                        <span>Laptops</span>
+                        <div class="chip-glow"></div>
+                    </button>
+                    <button class="filter-chip quantum-chip" data-category="Tablets">
+                        <span>Tablets</span>
+                        <div class="chip-glow"></div>
+                    </button>
+                    <button class="filter-chip quantum-chip" data-category="Audio">
+                        <span>Audio</span>
+                        <div class="chip-glow"></div>
+                    </button>
+                    <button class="filter-chip quantum-chip" data-category="Accessories">
+                        <span>Accessories</span>
+                        <div class="chip-glow"></div>
+                    </button>
+                    <button class="filter-chip quantum-chip" data-category="Gaming">
+                        <span>Gaming</span>
+                        <div class="chip-glow"></div>
+                    </button>
+                    <button class="filter-chip quantum-chip" data-category="Smart Home">
+                        <span>Smart Home</span>
+                        <div class="chip-glow"></div>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="products-grid" id="products-grid">
+                <!-- Products will be inserted here by JavaScript -->
+            </div>
+            
+            <div class="no-products" id="no-products" style="display: none;">
+                <div class="empty-state futuristic-empty">
+                    <div class="empty-icon-container">
+                        <span class="material-icons empty-icon">search_off</span>
+                        <div class="icon-rings">
+                            <div class="ring ring-1"></div>
+                            <div class="ring ring-2"></div>
+                            <div class="ring ring-3"></div>
+                        </div>
+                    </div>
+                    <h4>No products found in this dimension</h4>
+                    <p>Try adjusting your search parameters or explore different categories</p>
+                    <button class="reset-btn cosmic-btn" onclick="window.location.reload()">
+                        <span class="material-icons">refresh</span>
+                        Reset Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Footer -->
+    <footer class="site-footer quantum-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h4 class="footer-logo">⚡ Chandran Electronics</h4>
+                    <p>Your gateway to the future of technology</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <span class="material-icons">facebook</span>
+                        </a>
+                        <a href="#" class="social-link">
+                            <span class="material-icons">alternate_email</span>
+                        </a>
+                        <a href="#" class="social-link">
+                            <span class="material-icons">language</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h5>Company</h5>
+                        <a href="#">About Us</a>
+                        <a href="#">Careers</a>
+                        <a href="#">News</a>
+                    </div>
+                    <div class="footer-column">
+                        <h5>Support</h5>
+                        <a href="#">Help Center</a>
+                        <a href="#">Contact</a>
+                        <a href="#">Returns</a>
+                    </div>
+                    <div class="footer-column">
+                        <h5>Legal</h5>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Chandran Electronics. All rights reserved. Made with ❤️ for tech enthusiasts.</p>
+                <div class="footer-tech-badge">
+                    <span>Powered by Future Tech</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Action Button -->
+    <div class="fab-container">
+        <button class="fab cosmic-fab" id="scroll-to-top">
+            <span class="material-icons">keyboard_arrow_up</span>
+            <div class="fab-ripple"></div>
+        </button>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

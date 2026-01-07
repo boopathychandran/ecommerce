@@ -1,58 +1,13 @@
 {% load static %}
-<div class="grid-products" id="product-grid-area" style="opacity: 1;">
+<div class="products-grid" id="product-grid-area">
     {% for product in products %}
-    <div class="card-glass">
-        <!-- Category Label -->
-        <div
-            style="position: absolute; top: 1rem; left: 1rem; background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(4px); padding: 0.3rem 0.8rem; border-radius: 8px; font-size: 0.75rem; font-weight: 600; color: white; z-index: 10;">
-            {{ product.category }}
-        </div>
-
-        <!-- Image -->
-        <a href="{% url 'product_detail' product.slug %}" class="product-img-wrapper" style="display: block;">
-            {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-img"
-                id="product-img-{{ product.id }}">
-            {% else %}
-            <img src="{% static 'images/default.jpg' %}" alt="No Image" class="product-img"
-                id="product-img-{{ product.id }}">
-            {% endif %}
-        </a>
-
-        <!-- Content -->
-        <div style="padding: 0.5rem 0;">
-            <a href="{% url 'product_detail' product.slug %}" style="display: block; margin-bottom: 0.5rem;">
-                <h3
-                    style="font-size: 1.1rem; font-weight: 700; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                    {{ product.name }}</h3>
-            </a>
-
-            <div
-                style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 800; color: var(--primary-500); margin-bottom: 1rem;">
-                ₹{{ product.price }}
-            </div>
-
-            <!-- Actions -->
-            <div style="display: flex; gap: 0.8rem;">
-                <button class="btn-modern btn-primary" style="flex: 1; font-size: 0.9rem;"
-                    onclick="addToCart('{{ product.slug }}', '{{ product.id }}', this)">
-                    <span class="material-icons" style="font-size: 1.1rem;">shopping_bag</span> Add
-                </button>
-                <button class="btn-modern btn-glass" style="padding: 0.8rem;"
-                    onclick="addToWishlist('{{ product.slug }}')" title="Add to Wishlist">
-                    <span class="material-icons" style="font-size: 1.2rem; color: var(--danger);">favorite_border</span>
-                </button>
-            </div>
-        </div>
-    </div>
+        {% include 'login/partials/product_card.html' %}
     {% empty %}
-    <div
-        style="grid-column: 1/-1; text-align: center; padding: 4rem; background: var(--bg-surface); border-radius: 20px; border: 1px solid var(--border-glass);">
-        <span class="material-icons"
-            style="font-size: 4rem; color: var(--text-muted); opacity: 0.5; margin-bottom: 1rem;">search_off</span>
-        <h3 style="color: var(--text-muted);">No products found</h3>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Try adjusting your filters or search query.</p>
-    </div>
+        <div style="grid-column:1/-1;text-align:center;padding:4rem;background:rgba(255,255,255,0.02);border-radius:20px;border:1px solid rgba(255,255,255,0.03);">
+            <span class="material-icons" style="font-size:4rem;color:var(--muted);opacity:0.6;margin-bottom:1rem;">search_off</span>
+            <h3 class="text-muted">No products found</h3>
+            <p class="text-muted" style="font-size:0.95rem;">Try adjusting your search query.</p>
+        </div>
     {% endfor %}
 </div>
 
@@ -61,10 +16,10 @@
 <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 4rem;">
     {% if products.has_previous %}
     <a href="?page={{ products.previous_page_number }}{% if url_params %}&{{ url_params }}{% endif %}"
-        class="btn-modern btn-glass"
+        class="filter-chip"
         hx-get="{% url 'ecommerce' %}?page={{ products.previous_page_number }}{% if url_params %}&{{ url_params }}{% endif %}"
         hx-target="#product-grid-area" hx-push-url="true">
-        <span class="material-icons">arrow_back</span> Prev
+        <span class="material-icons" style="vertical-align: middle;">arrow_back</span> Prev
     </a>
     {% endif %}
 
@@ -73,11 +28,10 @@
     </span>
 
     {% if products.has_next %}
-    <a href="?page={{ products.next_page_number }}{% if url_params %}&{{ url_params }}{% endif %}"
-        class="btn-modern btn-glass"
+    <a href="?page={{ products.next_page_number }}{% if url_params %}&{{ url_params }}{% endif %}" class="filter-chip"
         hx-get="{% url 'ecommerce' %}?page={{ products.next_page_number }}{% if url_params %}&{{ url_params }}{% endif %}"
         hx-target="#product-grid-area" hx-push-url="true">
-        Next <span class="material-icons">arrow_forward</span>
+        Next <span class="material-icons" style="vertical-align: middle;">arrow_forward</span>
     </a>
     {% endif %}
 </div>

@@ -46,6 +46,12 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_featured = models.BooleanField(default=False)
+    
+    # 2025 Sustainability Features
+    carbon_footprint = models.DecimalField(max_digits=5, decimal_places=2, default=0.0, help_text="kg CO2 per unit")
+    sustainability_score = models.PositiveIntegerField(default=70, validators=[MinValueValidator(0)])
+    is_eco_friendly = models.BooleanField(default=False)
+    eco_packaging_available = models.BooleanField(default=True)
 
     class Meta:
         indexes = [
@@ -108,6 +114,16 @@ class Order(models.Model):
     shipping_address = models.TextField(blank=True)
     shipping_city = models.CharField(max_length=100, blank=True)
     shipping_pincode = models.CharField(max_length=10, blank=True)
+    
+    # 2025 Payment Features
+    PAYMENT_METHOD_CHOICES = [
+        ('card', 'Credit/Debit Card'),
+        ('upi', 'UPI / Digital Wallet'),
+        ('crypto', 'Cryptocurrency'),
+        ('bnpl', 'Buy Now, Pay Later'),
+    ]
+    payment_method_type = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES, default='card')
+    is_eco_packaging_requested = models.BooleanField(default=False)
 
     class Meta:
         indexes = [
@@ -168,6 +184,11 @@ class Profile(models.Model):
     profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=True)
+    
+    # 2025 Gamification Features
+    loyalty_points = models.PositiveIntegerField(default=0)
+    badges = models.JSONField(default=list, blank=True, help_text="List of earned badges")
+    
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -239,6 +260,7 @@ class Review(models.Model):
         validators=[MinValueValidator(1)]
     )
     review_text = models.TextField(blank=True)
+    video_url = models.URLField(blank=True, null=True, help_text="Link to video testimonial (e.g., TikTok/Instagram/YouTube)")
     helpful_count = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

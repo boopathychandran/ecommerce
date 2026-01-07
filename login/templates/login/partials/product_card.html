@@ -1,0 +1,51 @@
+{% load static image_tags %}
+<article class="product-card" data-slug="{{ product.slug }}">
+  <div class="product-image-frame">
+    {% if product.image %}
+    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-src="{{ product.image.url }}"
+      data-srcset="{{ product.image|thumbnail:300 }} 300w, {{ product.image|thumbnail:600 }} 600w"
+      data-sizes="(max-width:400px) 100vw, 300px" alt="{{ product.name }}" class="product-image lazyload"
+      data-lazy="true">
+    <noscript>
+      <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+    </noscript>
+    {% else %}
+    <img src="{% static 'images/default.jpg' %}" alt="No Image" class="product-image">
+    {% endif %}
+
+    <!-- Hover Overlay Link -->
+    <a href="{% url 'product_detail' product.slug %}" style="position:absolute; inset:0; z-index:2;"></a>
+
+    <!-- Badges -->
+    <div style="position:absolute; top:12px; left:12px; z-index:3;">
+      <span class="chip" style="padding:4px 10px; font-size:0.75rem; background:rgba(255,255,255,0.9);">
+        {{ product.category.name|default:'Tech' }}
+      </span>
+    </div>
+
+    {% if product.is_eco_friendly %}
+    <div style="position:absolute; top:12px; right:12px; z-index:3;">
+      <span class="chip"
+        style="padding:4px 8px; font-size:0.75rem; background:#ecfdf5; color:#059669; border-color:#059669;">
+        <span class="material-icons" style="font-size:0.9rem; vertical-align:middle;">eco</span>
+      </span>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="card-details">
+    <a href="{% url 'product_detail' product.slug %}" class="card-title">{{ product.name }}</a>
+    <div class="card-price">₹{{ product.price }}</div>
+
+    <div class="card-action-row">
+      <button class="btn-primary" data-action="add-to-cart" data-product-id="{{ product.id }}"
+        data-product-slug="{{ product.slug }}">
+        Add to Cart
+      </button>
+      <button class="btn-secondary" data-action="toggle-wishlist" data-product-id="{{ product.id }}"
+        data-product-slug="{{ product.slug }}">
+        <span class="material-icons">favorite_border</span>
+      </button>
+    </div>
+  </div>
+</article>

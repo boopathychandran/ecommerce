@@ -11,126 +11,118 @@ from login.models import Product, Coupon
 
 @csrf_exempt
 def chat_response(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            user_message = data.get('message', '')
-            gemini_error = None
-            openai_error = None
-            
-            if not user_message:
-                return JsonResponse({'response': "I didn't catch that. Could you please repeat?"})
-
-            # 1. Try Google Gemini (Best Free Option)
-            gemini_key = getattr(settings, 'GEMINI_API_KEY', None)
-            print(f"DEBUG: Gemini Key found: {bool(gemini_key)}, Key start: {gemini_key[:5] if gemini_key else 'None'}")
-            
-            if gemini_key and gemini_key != 'your_gemini_api_key_here':
-                try:
-                    genai.configure(api_key=gemini_key)
-                    # Fetch user info for personalization
-                    user_name = request.user.username if request.user.is_authenticated else "Guest"
-                    
-                    # Fetch product data
-                    products = Product.objects.all()
-                    product_context = "\nAvailable Inventory:\n"
-                    for p in products:
-                        product_context += f"- [ID: {p.id}] {p.name}: ₹{p.price} (Category: {p.category}). Description: {p.description}\n"
-
-                    # Fetch available coupons
-                    coupons = Coupon.objects.filter(is_active=True)
-                    coupon_context = "\nAvailable Coupons:\n"
-                    for c in coupons:
-                        if c.is_valid():
-                            coupon_context += f"- {c.code}: {c.discount_percent}% OFF\n"
-
-                    # System prompt integration for Gemini
-                    system_instruction = f"""
-                    You are 'Chandranbot', the advanced AI Shopping Assistant for 'Chandran Electronics'.
-                    The current user is: {user_name}
-                    
-                    {product_context}
-                    {coupon_context}
-                    
-                    Your Mission:
-                    1. Help {user_name} find the PERFECT product from our inventory above.
-                    2. If a user asks for something we DON'T have, suggest the closest alternative from our list.
-                    3. ALWAYS mention the price and why it's a good choice.
-                    4. When recommending a product, you MUST use this format to link to it: [Product Name](/product/ID/)
-                    5. Provide shipping info (Free > ₹5000) and support info (+91 98765 43210) when relevant.
-                    6. If a user asks for discounts or coupons, tell them about the ones in the list above.
-                    
-                    Rules:
-                    - Be proactive! If they are looking for a laptop, don't just say 'we have laptops', say 'I recommend the [Yoga Book 2](/product/12/) because it has great battery life!'
-                    - Mention coupons if the user is hesitant about price or asks for deals.
-                    - Keep responses friendly, professional, and under 80 words.
-                    - Use Markdown for bolding and lists.
-                    """
-                    
-                    model = genai.GenerativeModel('gemini-flash-latest')
-                    chat = model.start_chat(history=[
-                        {"role": "user", "parts": [system_instruction]},
-                        {"role": "model", "parts": ["Understood. I am ready to assist customers of Chandran Electronics."]}
-                    ])
-                    
-                    response = chat.send_message(user_message)
-                    return JsonResponse({'response': response.text})
-                except Exception as e:
-                    gemini_error = str(e)
-                    print(f"Gemini Error: {e}")
-                    # Don't return error yet, try OpenAI fallback
-
-            # 2. Try OpenAI (Paid Option)
-            api_key = getattr(settings, 'OPENAI_API_KEY', None)
-            if api_key and api_key != 'your_openai_api_key_here':
-                try:
-                    client = openai.OpenAI(api_key=api_key)
-                    # Re-use or fetch context for OpenAI
-                    if 'product_context' not in locals():
-                        user_name = request.user.username if request.user.is_authenticated else "Guest"
-                        products = Product.objects.all()
-                        product_context = "\nAvailable Inventory:\n"
-                        for p in products:
-                            product_context += f"- [ID: {p.id}] {p.name}: ₹{p.price}. {p.description}\n"
-                    
-                    if 'coupon_context' not in locals():
-                        coupons = Coupon.objects.filter(is_active=True)
-                        coupon_context = "\nAvailable Coupons:\n"
-                        for c in coupons:
-                            if c.is_valid():
-                                coupon_context += f"- {c.code}: {c.discount_percent}% OFF\n"
-
-                    system_instruction = f"You are Chandranbot, a helpful AI shopping assistant for Chandran Electronics. Help user {user_name} find products and apply coupons. Use format [Name](/product/ID/) for links.\n\n{product_context}\n{coupon_context}"
-                    completion = client.chat.completions.create(
-                        model="gpt-4o", 
-                        messages=[
-                            {"role": "system", "content": system_instruction},
-                            {"role": "user", "content": user_message}
-                        ],
-                        max_tokens=150
-                    )
-                    return JsonResponse({'response': completion.choices[0].message.content.strip()})
-                except Exception as e:
-                    openai_error = str(e)
-                    print(f"OpenAI Error: {e}")
-
-            # 3. Fallback to Rule-based Logic (Offline Mode)
-            user_message = user_message.lower()
-            if 'hello' in user_message or 'hi' in user_message:
-                response_text = "Hello! I am your AI customer support assistant."
-            elif 'shipping' in user_message or 'delivery' in user_message:
-                response_text = "We offer free shipping on orders over ₹5000."
-            elif 'contact' in user_message or 'support' in user_message:
-                response_text = "Contact us at +91 98765 43210."
-            else:
-                extra_info = ""
-                if gemini_error or openai_error:
-                    extra_info = f" (Debug: Gemini={gemini_error}, OpenAI={openai_error})"
-                response_text = f"I am currently offline. Please configure my Gemini Brain to make me smart!{extra_info}"
-            
-            return JsonResponse({'response': response_text})
-            
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST required'}, status=405)
     
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
+    try:
+        data = json.loads(request.body)
+        user_message = data.get('message', '')
+        
+        if not user_message:
+            return JsonResponse({'response': "I didn't catch that. How can I ayudar today?"})
+
+        # --- Context Aggregation ---
+        user_name = request.user.username if request.user.is_authenticated else "Guest"
+        
+        # 1. Inventory Support
+        products = Product.objects.all().order_by('-is_featured', '-created_at')[:15]
+        inventory_context = "Available Products:\n"
+        for p in products:
+            inventory_context += f"- {p.name} (₹{p.price}, Slug: {p.slug})\n"
+
+        # 2. User Specific Context
+        personal_context = f"User: {user_name}\n"
+        cart_summary = "Your cart is currently empty."
+        order_summary = "No recent orders found."
+        
+        if request.user.is_authenticated:
+            from login.models import Cart, Order
+            # Cart Info
+            try:
+                cart = Cart.objects.get(user=request.user)
+                if cart.items.exists():
+                    items_str = ", ".join([f"{i.product.name} (x{i.quantity})" for i in cart.items.all()])
+                    cart_summary = f"Your cart has {cart.item_count} items: {items_str}. Total: ₹{cart.total_price}"
+            except Cart.DoesNotExist: pass
+            
+            # Order Info
+            recent_orders = Order.objects.filter(user=request.user).order_by('-created_at')[:3]
+            if recent_orders.exists():
+                order_summary = "Your recent orders:\n"
+                for o in recent_orders:
+                    order_summary += f"- Order #{o.id}: {o.status.upper()} (₹{o.total_price})\n"
+        
+        personal_context += f"Cart Status: {cart_summary}\nOrder Status: {order_summary}\n"
+
+        # 3. Promotions
+        coupons = Coupon.objects.filter(is_active=True)
+        active_promos = "Active Discounts: " + (", ".join([f"{c.code} ({c.discount_percent}% off)" for c in coupons if c.is_valid()]) or "None at the moment.")
+
+        # --- AI System Instruction ---
+        system_instruction = f"""
+        Identity: You are 'Chandran AI', a high-tech assistant for Chandran Electronics.
+        Atmosphere: Professional, futuristic, helpful. Use Markdown.
+        
+        Context:
+        {personal_context}
+        {inventory_context}
+        {active_promos}
+        
+        Capabilities:
+        - Suggest products using: [Product Name](/product/slug/)
+        - If the user wants to add to cart, suggest it and say you can't do it directly yet (but provide the link).
+        - If they want to pay, redirect them to [/payment/](/payment/).
+        - Be concise.
+        """
+
+        # --- LOCAL LOGIC ENGINE (Immediate Fallback) ---
+        local_response = None
+        user_msg_low = user_message.lower()
+        
+        if any(word in user_msg_low for word in ['what products', 'show', 'buy', 'inventory']):
+            local_response = f"I have several cutting-edge items! {inventory_context.replace('Available Products:', 'Our top picks:')}\nCheck them out: [View All Products](/ecommerce/)"
+        elif 'cart' in user_msg_low:
+            local_response = f"{cart_summary}. Want to [Checkout](/cart/)?"
+        elif 'order' in user_msg_low:
+            local_response = f"{order_summary}"
+        elif 'checkout' in user_msg_low or 'payment' in user_msg_low:
+             local_response = "Ready to upgrade your gear? [Proceed to Payment](/payment/)"
+
+        # --- AI CALLS ---
+        ai_response_text = None
+
+        # Try Gemini first
+        gemini_key = getattr(settings, 'GEMINI_API_KEY', None)
+        if gemini_key and gemini_key not in [None, '', 'your_gemini_api_key_here']:
+            try:
+                genai.configure(api_key=gemini_key)
+                model = genai.GenerativeModel('gemini-1.5-flash')
+                full_prompt = f"{system_instruction}\n\nUser: {user_message}"
+                res = model.generate_content(full_prompt)
+                if res and hasattr(res, 'text'):
+                    ai_response_text = res.text
+            except Exception as e:
+                print(f"Gemini API Error: {e}")
+
+        # Try OpenAI Fallback
+        if not ai_response_text:
+            openai_key = getattr(settings, 'OPENAI_API_KEY', None)
+            if openai_key and openai_key not in [None, '', 'your_openai_api_key_here']:
+                try:
+                    client = openai.OpenAI(api_key=openai_key)
+                    completion = client.chat.completions.create(
+                        model="gpt-4o",
+                        messages=[{"role": "system", "content": system_instruction}, {"role": "user", "content": user_message}]
+                    )
+                    ai_response_text = completion.choices[0].message.content
+                except Exception as e:
+                    print(f"OpenAI API Error: {e}")
+
+        # Final Response Logic
+        final_response = ai_response_text or local_response or "Our systems are currently calibrating. I'm here to help with products, cart, and orders—what tech are we looking for?"
+        
+        return JsonResponse({'response': final_response})
+
+    except Exception as e:
+        return JsonResponse({'response': f"Neural Link Error: {str(e)}"}, status=500)
+

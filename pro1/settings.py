@@ -58,6 +58,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'utils.middleware.ThumbnailsCacheControlMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -79,6 +80,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'login.context_processors.cart_wishlist_counts',
             ],
         },
     },
@@ -144,6 +146,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Thumbnails cache settings (used by ThumbnailsCacheControlMiddleware)
+THUMBNAILS_CACHE_MAX_AGE = int(os.getenv('THUMBNAILS_CACHE_MAX_AGE', '31536000'))
+
+# Optional CDN: if set, media will be served from this CDN domain in production
+# e.g. set CDN_MEDIA_DOMAIN=https://cdn.example.com then MEDIA_URL will be updated
+CDN_MEDIA_DOMAIN = os.getenv('CDN_MEDIA_DOMAIN', '')
+if CDN_MEDIA_DOMAIN and not DEBUG:
+    MEDIA_URL = CDN_MEDIA_DOMAIN.rstrip('/') + '/media/'
+
 # Login/Logout redirect URLs
 LOGIN_REDIRECT_URL = '/ecommerce/'
 LOGOUT_REDIRECT_URL = '/login/'
@@ -172,7 +183,8 @@ SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_SECURITY_POLICY = {
     'default-src': ("'self'",),
-    'script-src': ("'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "fonts.googleapis.com"),
+    'script-src': ("'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "fonts.googleapis.com", "https://checkout.razorpay.com"),
     'style-src': ("'self'", "'unsafe-inline'", "cdn.jsdelivr.net", "fonts.googleapis.com"),
     'font-src': ("'self'", "fonts.googleapis.com", "fonts.gstatic.com"),
+    'frame-src': ("'self'", "https://api.razorpay.com", "https://checkout.razorpay.com"),
 }

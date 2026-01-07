@@ -112,27 +112,67 @@ class DataMigrationService:
 class OrderService:
     @staticmethod
     @transaction.atomic
-    def create_order(user, address_data, cart_items, total_price, razorpay_data=None):
-        """Standardized order creation logic"""
+    def create_order(user, address_data, discount_percent=0):
+        """Unified order creation with 2025 Features: Loyalty, Badges, Sustainability"""
+        from .models import Cart, Profile
+        
+        cart = Cart.objects.get(user=user)
+        cart_items = cart.items.select_related('product')
+        
+        if not cart_items.exists():
+            return None
+            
+        total_price = cart.total_price
+        discount_amount = total_price * Decimal(str(discount_percent)) / Decimal('100')
+        final_total = total_price - discount_amount
+        
+        # Create Order
         order = Order.objects.create(
             user=user,
-            total_price=total_price,
-            shipping_address=address_data.get('address'),
-            shipping_city=address_data.get('city'),
-            shipping_pincode=address_data.get('pincode'),
-            razorpay_order_id=razorpay_data.get('id') if razorpay_data else ''
+            total_price=final_total,
+            shipping_address=address_data.get('address', ''),
+            shipping_city=address_data.get('city', ''),
+            shipping_pincode=address_data.get('pincode', ''),
+            status='paid', # Assuming payment success for this flow
+            payment_method_type='upi' # Default to digital wallet for 2025 vibe
         )
         
+        # Process items and sustainability
+        total_carbon = 0
         for item in cart_items:
-            product = Product.objects.select_for_update().get(id=item['id'])
             OrderItem.objects.create(
                 order=order,
-                product=product,
-                quantity=item['quantity'],
-                price_at_purchase=product.price
+                product=item.product,
+                quantity=item.quantity,
+                price_at_purchase=item.product.price
             )
-            # Reduce stock
-            product.stock -= item['quantity']
-            product.save()
+            # Update stock
+            item.product.stock -= item.quantity
+            item.product.save()
             
+            # Sustainability tracking
+            total_carbon += (item.product.carbon_footprint * item.quantity)
+            
+        # Clear cart
+        cart_items.delete()
+        
+        # Gamification: Update Loyalty Points (1 point for every ₹100)
+        profile, created = Profile.objects.get_or_create(user=user)
+        points_earned = int(final_total // 100)
+        profile.loyalty_points += points_earned
+        
+        # Award Badges
+        order_count = Order.objects.filter(user=user).count()
+        new_badges = []
+        if order_count == 1 and "Pioneer" not in profile.badges:
+            new_badges.append("Pioneer")
+        if profile.loyalty_points >= 1000 and "Elite Collector" not in profile.badges:
+            new_badges.append("Elite Collector")
+            
+        if new_badges:
+            profile.badges.extend(new_badges)
+            
+        profile.save()
+        logger.info(f"Order {order.id} created for {user.username}. Points: {points_earned}")
+        
         return order

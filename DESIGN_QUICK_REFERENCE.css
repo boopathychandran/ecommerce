@@ -1,0 +1,247 @@
+/* ==========================================
+   FUTURE TECH DESIGN - QUICK REFERENCE
+   ========================================== */
+
+/* === COLOR VARIABLES === */
+:root {
+    --bg-dark: #050511;
+    /* Main background */
+    --primary: #00f3ff;
+    /* Cyan neon - primary actions */
+    --secondary: #bd00ff;
+    /* Purple neon - accents */
+    --accent: #ff0055;
+    /* Pink neon - alerts/danger */
+    --text-main: #ffffff;
+    /* Primary text */
+    --text-muted: #a0a0b0;
+    /* Secondary text */
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+}
+
+/* === COMMON PATTERNS === */
+
+/* Glass Card */
+.glass-card {
+    background: rgba(10, 10, 25, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: 0 0 40px rgba(0, 243, 255, 0.1);
+}
+
+/* Quantum Button (Primary) */
+.quantum-btn {
+    background: var(--primary);
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem 2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.quantum-btn:hover {
+    box-shadow: 0 0 20px var(--primary);
+}
+
+/* Action Button (Secondary) */
+.action-btn {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: #fff;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.action-btn:hover {
+    background: var(--glass-highlight);
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+}
+
+/* Rainbow Text Effect */
+.rainbow-text {
+    background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
+    }
+}
+
+/* Holographic Text */
+.holographic-text {
+    text-shadow:
+        2px 2px 0px rgba(0, 243, 255, 0.3),
+        -2px -2px 0px rgba(189, 0, 255, 0.3);
+}
+
+/* Form Input Style */
+input,
+select,
+textarea {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    color: white;
+    padding: 1rem;
+    border-radius: 12px;
+}
+
+input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+    outline: none;
+}
+
+/* Product Card */
+.product-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: var(--primary);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(0, 243, 255, 0.2);
+}
+
+/* Navigation Glass */
+.navbar.ultra-glass {
+    background: rgba(10, 10, 25, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Badge/Count */
+.count-badge {
+    background: var(--accent);
+    color: white;
+    font-size: 0.7rem;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+}
+
+/* === UTILITY CLASSES === */
+
+.cyber-glass {
+    background: linear-gradient(145deg,
+            rgba(255, 255, 255, 0.05) 0%,
+            rgba(255, 255, 255, 0.01) 100%);
+    border: 1px solid var(--glass-border);
+}
+
+.neon-glow {
+    box-shadow: 0 0 20px var(--primary);
+}
+
+.filter-chip {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-muted);
+    padding: 0.6rem 1.2rem;
+    border-radius: 30px;
+}
+
+.filter-chip.active {
+    background: rgba(0, 243, 255, 0.1);
+    border-color: var(--primary);
+    color: var(--primary);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+}
+
+/* === BACKGROUNDS === */
+
+/* Mesh Background (Fixed, animated) */
+.mesh-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2;
+    background: var(--bg-dark);
+    background-image:
+        radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+        radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+    filter: blur(80px);
+    opacity: 0.6;
+    animation: meshPulse 10s ease-in-out infinite alternate;
+}
+
+/* Particle Background (Fixed, static pattern) */
+.particle-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        radial-gradient(circle, rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+        radial-gradient(circle, rgba(189, 0, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px, 60px 60px;
+}
+
+/* === RESPONSIVE === */
+
+@media (max-width: 768px) {
+    .nav-content {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+}
+
+/* === FONTS === */
+/* Include in <head>: */
+/*
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+*/
+
+/* === TEMPLATE STRUCTURE === */
+/*
+<body>
+    <div class="mesh-background"></div>
+    <div class="particle-background"></div>
+    
+    <header class="site-header">...</header>
+    <nav class="navbar ultra-glass">...</nav>
+    
+    <div class="container">
+        <h1 class="section-title holographic-text">Title</h1>
+        <div class="search-container cyber-glass">
+            <!-- Content -->
+        </div>
+    </div>
+</body>
+*/

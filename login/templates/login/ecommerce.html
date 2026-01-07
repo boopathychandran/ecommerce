@@ -337,10 +337,10 @@
       <div class="product-title">{{ product.name }}</div>
       <div class="product-price">₹{{ product.price }}</div>
       <div class="product-actions">
-        <button type="button" class="btn" onclick="addToCart('{{ product.id }}')">
+        <button type="button" class="btn" data-action="add-to-cart" data-product-id="{{ product.id }}" data-product-slug="{{ product.slug }}">
           <span class="material-icons" style="vertical-align:middle;">add_shopping_cart</span>
         </button>
-        <button type="button" class="btn btn-wishlist" onclick="addToWishlist('{{ product.id }}')">
+        <button type="button" class="btn btn-wishlist" data-action="toggle-wishlist" data-product-id="{{ product.id }}" data-product-slug="{{ product.slug }}">
           <span class="material-icons" style="vertical-align:middle;">favorite_border</span>
         </button>
       </div>

@@ -1,0 +1,15 @@
+{
+  "name": "Chandran Electronics - Future Tech",
+  "short_name": "CE-Future",
+  "start_url": "/ecommerce/",
+  "display": "standalone",
+  "background_color": "#050511",
+  "theme_color": "#00f3ff",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/91/91531.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

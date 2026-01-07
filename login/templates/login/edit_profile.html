@@ -1,416 +1,169 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile - Chandran Electronics</title>
-    <link rel="stylesheet" href="{% static 'css/modern-gradient.css' %}">
+    <title>Edit Profile | Future Tech</title>
+    <link rel="stylesheet" href="{% static 'css/future-tech.css' %}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--font-body);
-            background: var(--gradient-animated);
-            background-size: 800% 800%;
-            animation: gradientFlow 20s ease infinite;
-            min-height: 100vh;
-        }
-
-        .top-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 1.5rem 3rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            background: transparent;
-        }
-
-        .top-right-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .icon-badge {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--gradient-button);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
-            text-decoration: none;
-        }
-
-        .icon-badge:hover {
-            transform: scale(1.1);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.6);
-        }
-
-        .logo {
-            font-size: 2rem;
-            color: var(--color-primary);
-        }
-
-        .main-content {
-            padding-top: 8rem;
-            min-height: 100vh;
-        }
-
-        .edit-header {
-            text-align: center;
-            padding: 2rem 3rem 1rem 3rem;
-            background: white;
-        }
-
-        .edit-header h1 {
-            font-family: var(--font-heading);
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: var(--gradient-stats);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .edit-header p {
-            color: #64748B;
-            font-size: 1.1rem;
-        }
-
-        .form-container {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 3rem;
-            background: white;
-        }
-
-        .form-card {
-            background: white;
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .form-section {
-            margin-bottom: 2.5rem;
-        }
-
-        .form-section:last-of-type {
-            margin-bottom: 0;
-        }
-
-        .form-section-title {
-            font-family: var(--font-heading);
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #1E293B;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--gradient-button);
-        }
-
-        .form-group {
+        .form-field {
             margin-bottom: 1.5rem;
         }
 
-        .form-group label {
-            display: block;
-            font-weight: 700;
-            color: #1E293B;
-            margin-bottom: 0.7rem;
-            font-size: 0.95rem;
+        .form-label {
+            color: var(--primary);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            background: var(--gradient-button);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            display: block;
         }
 
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
+        input,
+        select,
+        textarea {
             width: 100%;
-            padding: 1rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-family: var(--font-body);
-            font-size: 1rem;
-            color: #1E293B;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid var(--glass-border) !important;
+            color: white !important;
+            padding: 1rem !important;
+            font-family: var(--font-main) !important;
+            outline: none !important;
+            border-radius: 12px !important;
             transition: all 0.3s;
-            background: #f8fafc;
         }
 
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--color-primary);
-            background: white;
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .help-text {
-            font-size: 0.85rem;
-            color: #64748B;
-            margin-top: 0.5rem;
-            font-style: italic;
-        }
-
-        .error-list {
-            background: #FEE2E2;
-            border: 2px solid #FECACA;
-            border-radius: 10px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            color: #991B1B;
-        }
-
-        .error-list li {
-            margin-bottom: 0.5rem;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 2.5rem;
-            padding-top: 2rem;
-            border-top: 2px solid #e2e8f0;
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            border: none;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            transition: all 0.3s;
-            text-decoration: none;
-            font-family: var(--font-body);
-        }
-
-        .btn-save {
-            background: var(--gradient-button);
-            color: white;
-            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
-        }
-
-        .btn-save:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.5);
-        }
-
-        .btn-cancel {
-            background: linear-gradient(135deg, #06B6D4 0%, #8B5CF6 100%);
-            color: white;
-            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.3);
-        }
-
-        .btn-cancel:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.5);
-        }
-
-        .btn-password {
-            background: linear-gradient(135deg, #F59E0B 0%, #EC4899 100%);
-            color: white;
-            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
-        }
-
-        .btn-password:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.5);
-        }
-
-        .form-group ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .form-group ul li {
-            background: #FEE2E2;
-            border-left: 4px solid #EF4444;
-            color: #991B1B;
-            padding: 0.75rem 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-
-        @keyframes gradientFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @media (max-width: 768px) {
-            .edit-header h1 {
-                font-size: 2rem;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-            }
-
-            .top-nav {
-                padding: 1rem 1.5rem;
-            }
-
-            .form-container {
-                padding: 1.5rem;
-            }
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2) !important;
         }
     </style>
 </head>
-<body class="modern-gradient">
-    <!-- Top Navigation -->
-    <nav class="top-nav">
-        <a href="{% url 'ecommerce' %}" class="logo material-icons" style="text-decoration: none;">storefront</a>
-        <div class="top-right-actions">
-            <!-- Wishlist Button -->
-            <a href="{% url 'wishlist' %}" class="icon-badge">
-                <span class="material-icons">favorite</span>
-            </a>
-            
-            <!-- Cart Button -->
-            <a href="{% url 'cart' %}" class="icon-badge">
-                <span class="material-icons">shopping_cart</span>
-            </a>
 
-            <!-- Profile Button -->
-            <a href="{% url 'profile' %}" class="icon-badge">
-                <span class="material-icons">account_circle</span>
-            </a>
+<body>
+    <div class="mesh-background"></div>
+    <div class="particle-background"></div>
 
-            <!-- Logout Button -->
-            <a href="{% url 'logout' %}" class="icon-badge" style="background: linear-gradient(135deg, #EC4899 0%, #FDA4AF 100%); box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);">
-                <span class="material-icons">logout</span>
-            </a>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo">
+                        <h1 class="animated-title" style="font-size: 2rem;">
+                            <span class="letter">⚡</span>
+                            <span class="letter">C</span><span class="letter">h</span><span class="letter">a</span><span
+                                class="letter">n</span><span class="letter">d</span><span class="letter">r</span><span
+                                class="letter">a</span><span class="letter">n</span>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="navbar ultra-glass">
+        <div class="container">
+            <div class="nav-content">
+                <div class="nav-links">
+                    <a href="{% url 'profile' %}" class="nav-link">
+                        <span class="material-icons">arrow_back</span>
+                        <span class="nav-text">Back to Profile</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <main class="main-content">
-        <div class="edit-header">
-            <h1>Edit Profile</h1>
-            <p>Update your account information</p>
-        </div>
+    <div class="container" style="padding: 4rem 0;">
+        <h1 class="section-title holographic-text" style="font-size: 2.5rem; text-align: left; margin-bottom: 2rem;">
+            Modify Identity Data</h1>
 
-        <div class="form-container">
-            <div class="form-card">
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
+        <div class="search-container cyber-glass" style="max-width: 800px; padding: 2.5rem;">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
 
-                    <!-- User Information Section -->
-                    <div class="form-section">
-                        <h2 class="form-section-title">
-                            <span class="material-icons" style="vertical-align: middle; margin-right: 0.5rem;">person</span>
-                            User Information
-                        </h2>
-
-                        {% if user_form.non_field_errors %}
-                            <div class="error-list">
-                                <strong>Errors:</strong>
-                                {{ user_form.non_field_errors }}
-                            </div>
+                <!-- Photo Upload -->
+                <div class="form-field">
+                    <label class="form-label">Avatar Image</label>
+                    <div
+                        style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1rem; display: flex; align-items: center; gap: 1rem;">
+                        {% if form.profile_photo.value %}
+                        <img src="{{ form.profile_photo.value.url }}"
+                            style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
                         {% endif %}
-
-                        {% for field in user_form %}
-                            <div class="form-group">
-                                {{ field.label_tag }}
-                                {% if field.help_text %}
-                                    <div class="help-text">{{ field.help_text|safe }}</div>
-                                {% endif %}
-                                {{ field }}
-                                {% if field.errors %}
-                                    <div class="error-list">
-                                        {{ field.errors }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
+                        {{ form.profile_photo }}
                     </div>
+                </div>
 
-                    <!-- Profile Information Section -->
-                    <div class="form-section">
-                        <h2 class="form-section-title">
-                            <span class="material-icons" style="vertical-align: middle; margin-right: 0.5rem;">contact_card</span>
-                            Profile Information
-                        </h2>
-
-                        {% if profile_form.non_field_errors %}
-                            <div class="error-list">
-                                <strong>Errors:</strong>
-                                {{ profile_form.non_field_errors }}
-                            </div>
-                        {% endif %}
-
-                        {% for field in profile_form %}
-                            <div class="form-group">
-                                {{ field.label_tag }}
-                                {% if field.help_text %}
-                                    <div class="help-text">{{ field.help_text|safe }}</div>
-                                {% endif %}
-                                {{ field }}
-                                {% if field.errors %}
-                                    <div class="error-list">
-                                        {{ field.errors }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div class="form-field">
+                        <label class="form-label">First Name</label>
+                        {{ form.first_name }}
                     </div>
-
-                    <!-- Action Buttons -->
-                    <div class="action-buttons">
-                        <button type="submit" class="btn btn-save">
-                            <span class="material-icons">save</span>
-                            Save Changes
-                        </button>
-                        <a href="{% url 'profile' %}" class="btn btn-cancel">
-                            <span class="material-icons">close</span>
-                            Cancel
-                        </a>
-                        <a href="{% url 'password_change' %}" class="btn btn-password">
-                            <span class="material-icons">lock</span>
-                            Change Password
-                        </a>
+                    <div class="form-field">
+                        <label class="form-label">Last Name</label>
+                        {{ form.last_name }}
                     </div>
-                </form>
-            </div>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Email Link</label>
+                    {{ form.email }}
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Comm Device</label>
+                    {{ form.phone_number }}
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label">Physical Coordinates</label>
+                    {{ form.address }}
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div class="form-field">
+                        <label class="form-label">Sector</label>
+                        {{ form.city }}
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Zone Code</label>
+                        {{ form.pincode }}
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div class="form-field">
+                        <label class="form-label">Birth Date</label>
+                        {{ form.date_of_birth }}
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Gender</label>
+                        {{ form.gender }}
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem;">
+                    <button type="submit" class="quantum-btn"
+                        style="width: auto; padding: 0 3rem; font-weight: 700; border-radius: 30px; height: 50px;">
+                        <span class="material-icons" style="margin-right: 0.5rem;">save</span> UPDATE DATA
+                    </button>
+                    <a href="{% url 'profile' %}" class="action-btn"
+                        style="width: auto; padding: 0 2rem; height: 50px; border-radius: 30px; display: flex; align-items: center; text-decoration: none;">
+                        CANCEL
+                    </a>
+                </div>
+            </form>
         </div>
-    </main>
+    </div>
 </body>
+
 </html>
